@@ -1,0 +1,40 @@
+.interview-card {
+  position: relative;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  display: flex; flex-direction: column; gap: 0.75rem;
+}
+.interview-card:hover { border-color: rgba(167,139,250,0.25); background: rgba(167,139,250,0.03); }
+.card-top { display: flex; align-items: center; justify-content: space-between; }
+.card-role { font-size: 0.95rem; font-weight: 500; color: rgba(255,255,255,0.8); text-transform: capitalize; }
+.card-status { font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 20px; }
+.card-status.completed { background: rgba(52,211,153,0.1); color: #34d399; }
+.card-status.in-progress { background: rgba(251,191,36,0.1); color: #fbbf24; }
+.card-meta { display: flex; gap: 1rem; font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+.card-score { display: flex; align-items: center; gap: 0.75rem; }
+.score-ring {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: conic-gradient(#a78bfa calc(var(--score) * 1%), rgba(255,255,255,0.08) 0);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.score-ring::before {
+  content: ''; position: absolute; inset: 5px;
+  border-radius: 50%; background: #0d0d18;
+}
+.score-ring span { position: relative; z-index: 1; font-size: 0.75rem; font-weight: 600; color: #a78bfa; }
+.score-text { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
+.card-delete {
+  position: absolute; top: 0.75rem; right: 0.75rem;
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 1px solid rgba(239,68,68,0.2); background: transparent;
+  color: rgba(239,68,68,0.4); font-size: 0.7rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; opacity: 0;
+}
+.interview-card:hover .card-delete { opacity: 1; }
+.card-delete:hover { background: rgba(239,68,68,0.12); color: #f87171; border-color: rgba(239,68,68,0.4); }

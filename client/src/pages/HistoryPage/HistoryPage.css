@@ -1,0 +1,21 @@
+.history-page { background: #080810; min-height: calc(100vh - 64px); padding: 3rem 2rem; }
+.history-container { max-width: 1100px; margin: 0 auto; }
+.history-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; }
+.history-header h1 { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #fff; margin: 0 0 0.25rem; letter-spacing: -0.03em; }
+.history-header p { font-size: 0.875rem; color: rgba(255,255,255,0.35); margin: 0; }
+.history-actions { display: flex; gap: 0.75rem; align-items: center; }
+.new-btn { padding: 0.6rem 1.25rem; background: linear-gradient(135deg, #7c3aed, #a78bfa); border: none; border-radius: 8px; color: white; font-size: 0.875rem; font-weight: 500; cursor: pointer; }
+.clear-btn { padding: 0.6rem 1.25rem; background: transparent; border: 1px solid rgba(239,68,68,0.2); border-radius: 8px; color: rgba(239,68,68,0.5); font-size: 0.875rem; cursor: pointer; transition: all 0.15s; }
+.clear-btn:hover { border-color: rgba(239,68,68,0.4); color: #f87171; }
+.history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+.card-skeleton { height: 130px; background: rgba(255,255,255,0.03); border-radius: 14px; animation: shimmer 1.5s ease-in-out infinite; }
+@keyframes shimmer { 0%,100%{opacity:0.4} 50%{opacity:0.8} }
+.history-empty { text-align: center; padding: 4rem 2rem; }
+.history-empty .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+.history-empty h3 { font-size: 1.2rem; color: rgba(255,255,255,0.6); margin: 0 0 0.5rem; }
+.history-empty p { font-size: 0.875rem; color: rgba(255,255,255,0.3); margin: 0 0 1.5rem; }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 2rem; }
+.pagination button { padding: 0.5rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 0.875rem; transition: all 0.15s; }
+.pagination button:hover:not(:disabled) { border-color: rgba(167,139,250,0.3); color: #a78bfa; }
+.pagination button:disabled { opacity: 0.3; cursor: not-allowed; }
+.pagination span { font-size: 0.82rem; color: rgba(255,255,255,0.3); }
