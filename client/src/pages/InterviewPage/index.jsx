@@ -1,6 +1,7 @@
 // client/src/pages/InterviewPage/index.jsx
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { getInterview, submitTextAnswer, transcribeAudio,
          submitCode, endInterview } from '../../services/interviewService';
 import AudioPlayer from '../../components/AudioPlayer';
@@ -57,9 +58,17 @@ function InterviewPage() {
     setState('thinking');
     try {
       const transcript = await transcribeAudio(audioBlob);
+      if (!transcript || !transcript.trim()) {
+        toast.error('No speech detected. Please speak clearly or type your answer.');
+        setState('listening');
+        return;
+      }
       const result = await submitTextAnswer(id, transcript);
       processAnswerResult(result);
-    } catch { setState('listening'); }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Error processing speech answer.');
+      setState('listening');
+    }
   };
 
   const handleTextSubmit = async () => {

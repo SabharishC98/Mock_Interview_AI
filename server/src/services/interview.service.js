@@ -34,7 +34,13 @@ export const submitAnswer = async (interviewId, userId, answerText) => {
   const interview = await Interview.findOne({ _id: interviewId, userId });
   if (!interview) { const e = new Error('Interview not found'); e.statusCode = 404; throw e; }
 
-  interview.messages.push({ role: 'user', content: answerText });
+  if (!answerText || !answerText.trim()) {
+    const e = new Error('Answer content is required.');
+    e.statusCode = 400;
+    throw e;
+  }
+
+  interview.messages.push({ role: 'user', content: answerText.trim() });
 
   const isLastQuestion = interview.currentQuestion >= interview.totalQuestions;
   let responseText, audioBase64;
