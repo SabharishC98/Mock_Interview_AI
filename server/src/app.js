@@ -9,8 +9,33 @@ import routes from './routes/index.js';
 
 const app = express();
 
-const clientOrigin = process.env.CLIENT_URL || 'http://localhost:5173';
-app.use(cors({ origin: clientOrigin, credentials: true }));
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(',').map(o => o.trim())
+  : [];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+
+    const isAllowed = allowedOrigins.some(allowedOpt => {
+      if (!/^https?:\/\//i.test(allowedOpt)) {
+        return origin === `https://${allowedOpt}` || origin === `http://${allowedOpt}`;
+      }
+      return origin === allowedOpt;
+    });
+
+    if (
+      isAllowed ||
+      origin.endsWith('.vercel.app') ||
+      /^https?:\/\/localhost(:\d+)?$/.test(origin)
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
