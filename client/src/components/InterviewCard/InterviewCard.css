@@ -1,40 +1,19 @@
-.interview-card {
-  position: relative;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 14px;
-  padding: 1.25rem;
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
-  display: flex; flex-direction: column; gap: 0.75rem;
-}
-.interview-card:hover { border-color: rgba(167,139,250,0.25); background: rgba(167,139,250,0.03); }
-.card-top { display: flex; align-items: center; justify-content: space-between; }
-.card-role { font-size: 0.95rem; font-weight: 500; color: rgba(255,255,255,0.8); text-transform: capitalize; }
-.card-status { font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 20px; }
-.card-status.completed { background: rgba(52,211,153,0.1); color: #34d399; }
-.card-status.in-progress { background: rgba(251,191,36,0.1); color: #fbbf24; }
-.card-meta { display: flex; gap: 1rem; font-size: 0.78rem; color: rgba(255,255,255,0.3); }
-.card-score { display: flex; align-items: center; gap: 0.75rem; }
-.score-ring {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: conic-gradient(#a78bfa calc(var(--score) * 1%), rgba(255,255,255,0.08) 0);
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-}
-.score-ring::before {
-  content: ''; position: absolute; inset: 5px;
-  border-radius: 50%; background: #0d0d18;
-}
-.score-ring span { position: relative; z-index: 1; font-size: 0.75rem; font-weight: 600; color: #a78bfa; }
-.score-text { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
-.card-delete {
-  position: absolute; top: 0.75rem; right: 0.75rem;
-  width: 24px; height: 24px; border-radius: 50%;
-  border: 1px solid rgba(239,68,68,0.2); background: transparent;
-  color: rgba(239,68,68,0.4); font-size: 0.7rem; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.15s; opacity: 0;
-}
-.interview-card:hover .card-delete { opacity: 1; }
-.card-delete:hover { background: rgba(239,68,68,0.12); color: #f87171; border-color: rgba(239,68,68,0.4); }
+.interview-card { position: relative; display: flex; min-width: 0; flex-direction: column; gap: 14px; padding: 17px 18px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); box-shadow: var(--shadow-sm); cursor: pointer; transition: border-color .18s, box-shadow .18s, transform .18s; }
+.interview-card:hover { transform: translateY(-2px); border-color: #bfd2c6; box-shadow: 0 8px 20px rgba(34,52,42,.07); }
+.card-top { display: flex; min-width: 0; align-items: flex-start; justify-content: space-between; gap: 10px; padding-right: 4px; }
+.card-role { overflow: hidden; color: #29372f; font-size: .91rem; font-weight: 700; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap; }
+.card-status { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 999px; font-size: .66rem; font-weight: 700; line-height: 1.1; }
+.card-status.completed { background: #eaf4ed; color: #327451; }
+.card-status.in-progress { background: var(--warning-soft); color: var(--warning); }
+.card-meta { display: flex; flex-wrap: wrap; gap: 7px 15px; color: #7c8881; font-size: .75rem; }
+.card-meta span + span { position: relative; }
+.card-meta span + span::before { position: absolute; left: -9px; top: 50%; width: 3px; height: 3px; border-radius: 50%; background: #b9c3bd; content: ''; transform: translateY(-50%); }
+.card-score { display: flex; align-items: center; gap: 9px; padding-top: 11px; border-top: 1px solid #eef1ee; }
+.score-ring { position: relative; display: grid; width: 35px; height: 35px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: conic-gradient(var(--accent) calc(var(--score) * 1%), #e7ece8 0); }
+.score-ring::before { position: absolute; inset: 4px; border-radius: 50%; background: #fff; content: ''; }
+.score-ring span { position: relative; z-index: 1; color: var(--accent-dark); font-size: .7rem; font-weight: 800; }
+.score-text { color: #78847d; font-size: .76rem; }
+.card-delete { position: absolute; top: 11px; right: 11px; display: grid; width: 25px; height: 25px; place-items: center; border: 1px solid #f0d8d5; border-radius: 6px; background: #fff; color: #b46d66; font-size: .72rem; cursor: pointer; opacity: 0; transition: all .15s; }
+.interview-card:hover .card-delete, .card-delete:focus-visible { opacity: 1; }
+.card-delete:hover { border-color: #e7bcb7; background: var(--danger-soft); color: var(--danger); }
+@media (hover: none) { .card-delete { opacity: 1; } }

@@ -11,24 +11,24 @@ function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="navbar">
+    <nav className="navbar" aria-label="Main navigation">
       <div className="navbar-inner">
-        <Link to="/" className="navbar-brand">
-          <span className="brand-icon">◈</span>
+        <Link to="/" className="navbar-brand" aria-label="InterviewAI dashboard">
+          <span className="brand-icon" aria-hidden="true">IA</span>
           <span className="brand-text">InterviewAI</span>
         </Link>
 
         {user && (
           <div className="navbar-links">
             <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>Dashboard</Link>
-            <Link to="/setup" className={`nav-link ${isActive('/setup') ? 'active' : ''}`}>New Interview</Link>
+            <Link to="/setup" className={`nav-link ${isActive('/setup') ? 'active' : ''}`}>New interview</Link>
             <Link to="/history" className={`nav-link ${isActive('/history') ? 'active' : ''}`}>History</Link>
           </div>
         )}
 
         {user && (
           <div className="navbar-user">
-            <span className="user-avatar">{user.name.charAt(0).toUpperCase()}</span>
+            <span className="user-avatar" aria-hidden="true">{user.name.charAt(0).toUpperCase()}</span>
             <span className="user-name">{user.name}</span>
             <button onClick={handleLogout} className="logout-btn">Sign out</button>
           </div>

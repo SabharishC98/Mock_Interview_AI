@@ -29,62 +29,66 @@ function HomePage() {
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const firstName = user?.name?.trim().split(' ')[0] || 'there';
 
   return (
-    <div className="home-page">
-      <div className="home-hero">
+    <main className="home-page">
+      <section className="home-hero" aria-labelledby="home-title">
         <div className="hero-content">
-          <p className="hero-greeting">{greeting},</p>
-          <h1 className="hero-name">{user?.name?.split(' ')[0]} 👋</h1>
-          <p className="hero-sub">Ready to sharpen your interview skills?</p>
+          <p className="hero-eyebrow">YOUR INTERVIEW PRACTICE</p>
+          <p className="hero-greeting">{greeting}, {firstName}</p>
+          <h1 className="hero-name" id="home-title">Make your next interview feel familiar.</h1>
+          <p className="hero-sub">Practice out loud, work through real questions, and get clear feedback on what to improve.</p>
           <button className="hero-cta" onClick={() => navigate('/setup')}>
-            Start new interview <span>→</span>
+            Start a practice session <span aria-hidden="true">→</span>
           </button>
         </div>
-        <div className="hero-visual">
-          <div className="visual-ring ring-1" />
-          <div className="visual-ring ring-2" />
-          <div className="visual-ring ring-3" />
-          <div className="visual-icon">◈</div>
-        </div>
-      </div>
+        <aside className="hero-note" aria-label="Practice session details">
+          <div className="note-topline"><span className="note-mark" aria-hidden="true">01</span><span>THE PRACTICE LOOP</span></div>
+          <div className="practice-steps">
+            <div><span className="practice-index">1</span><span>Choose a role</span></div>
+            <div><span className="practice-index">2</span><span>Answer at your pace</span></div>
+            <div><span className="practice-index">3</span><span>Review specific feedback</span></div>
+          </div>
+          <p className="note-caption">One focused session at a time.</p>
+        </aside>
+      </section>
 
-      <div className="stats-row">
-        <div className="stat-card"><div className="stat-value">{loading ? '—' : stats.total}</div><div className="stat-label">Total interviews</div></div>
-        <div className="stat-card"><div className="stat-value">{loading ? '—' : stats.completed}</div><div className="stat-label">Completed</div></div>
+      <section className="stats-row" aria-label="Your practice summary">
+        <div className="stat-card"><div className="stat-value">{loading ? '—' : stats.total}</div><div className="stat-label">Sessions started</div></div>
+        <div className="stat-card"><div className="stat-value">{loading ? '—' : stats.completed}</div><div className="stat-label">Sessions completed</div></div>
         <div className="stat-card stat-score"><div className="stat-value">{loading ? '—' : stats.avgScore ? `${stats.avgScore}%` : '—'}</div><div className="stat-label">Average score</div></div>
-      </div>
+      </section>
 
-      <div className="section">
+      <section className="section" aria-labelledby="recent-title">
         <div className="section-header">
-          <h2>Recent interviews</h2>
-          {recentInterviews.length > 0 && <Link to="/history" className="view-all">View all →</Link>}
+          <div><p className="section-kicker">KEEP YOUR MOMENTUM</p><h2 id="recent-title">Recent sessions</h2></div>
+          {recentInterviews.length > 0 && <Link to="/history" className="view-all">View history <span aria-hidden="true">→</span></Link>}
         </div>
         {loading ? (
-          <div className="cards-loading">{[1,2,3].map(i => <div key={i} className="card-skeleton" />)}</div>
+          <div className="cards-loading">{[1, 2, 3].map(i => <div key={i} className="card-skeleton" />)}</div>
         ) : recentInterviews.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">🎯</div>
-            <h3>No interviews yet</h3>
-            <p>Upload your resume and start practicing with AI Natalie</p>
-            <Link to="/setup" className="empty-cta">Get started →</Link>
+            <div className="empty-index" aria-hidden="true">01</div>
+            <div><h3>Your first session starts here</h3><p>Choose a role, add your resume, and practise with questions shaped around your experience.</p></div>
+            <Link to="/setup" className="empty-cta">Set up a session <span aria-hidden="true">→</span></Link>
           </div>
         ) : (
           <div className="interviews-grid">
             {recentInterviews.map(i => <InterviewCard key={i._id} interview={i} />)}
           </div>
         )}
-      </div>
+      </section>
 
-      <div className="tips-section">
-        <h2>Quick tips</h2>
+      <section className="tips-section" aria-labelledby="tips-title">
+        <div className="section-header"><div><p className="section-kicker">A BETTER PRACTICE SESSION</p><h2 id="tips-title">A few things that help</h2></div></div>
         <div className="tips-grid">
-          <div className="tip-card"><span className="tip-icon">📄</span><div><strong>Upload your resume</strong><p>Natalie tailors every question to your actual experience</p></div></div>
-          <div className="tip-card"><span className="tip-icon">🎙</span><div><strong>Speak your answers</strong><p>Voice practice builds real confidence for the actual interview</p></div></div>
-          <div className="tip-card"><span className="tip-icon">🔁</span><div><strong>Practice repeatedly</strong><p>Each session generates fresh, unique questions from your profile</p></div></div>
+          <div className="tip-card"><span className="tip-index">01</span><div><strong>Start with your resume</strong><p>Your experience gives the interviewer useful context for relevant follow-up questions.</p></div></div>
+          <div className="tip-card"><span className="tip-index">02</span><div><strong>Answer out loud</strong><p>Speaking helps you practise explaining your thinking clearly, not just recalling facts.</p></div></div>
+          <div className="tip-card"><span className="tip-index">03</span><div><strong>Use the feedback</strong><p>Pick one specific improvement and carry it into your next practice round.</p></div></div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
 

@@ -1,5 +1,6 @@
 // client/src/components/VoiceRecorder/index.jsx
 import { useState, useRef, useEffect } from 'react';
+import './VoiceRecorder.css';
 
 const MAX_RECORD_TIME = 300; // 5 minutes
 
@@ -54,15 +55,22 @@ function VoiceRecorder({ onSubmit, disabled }) {
   return (
     <div className="voice-recorder">
       {!audioBlob ? (
-        <button onClick={isRecording ? stopRecording : startRecording} disabled={disabled}
-          className={`record-btn ${isRecording ? 'recording' : ''}`}>
-          {isRecording ? `Stop (${formatTime(recordingTime)})` : 'Start Recording'}
-        </button>
+        <>
+          <div className="recorder-hint"><span className="recorder-dot" />{isRecording ? 'Recording your response' : 'Take a moment, then answer in your own words'}</div>
+          <button onClick={isRecording ? stopRecording : startRecording} disabled={disabled}
+            className={`record-btn ${isRecording ? 'recording' : ''}`}>
+            <span className="record-symbol" aria-hidden="true">{isRecording ? '■' : '●'}</span>
+            {isRecording ? `Stop recording · ${formatTime(recordingTime)}` : 'Start recording'}
+          </button>
+          <span className="recorder-limit">Up to 5 minutes · You can review before submitting</span>
+        </>
       ) : (
         <div className="preview">
           <audio src={audioUrl} controls />
-          <button onClick={handleSubmit}>Submit Answer</button>
-          <button onClick={handleReset}>Re-record</button>
+          <div className="preview-actions">
+            <button className="preview-submit" onClick={handleSubmit}>Submit answer</button>
+            <button className="preview-reset" onClick={handleReset}>Record again</button>
+          </div>
         </div>
       )}
     </div>

@@ -36,7 +36,7 @@ function LoginPage() {
       </div>
       <div className="login-card">
         <div className="login-header">
-          <span className="login-icon">◈</span>
+          <span className="login-icon" aria-hidden="true">IA</span>
           <h1>InterviewAI</h1>
           <p>Practice with an AI interviewer, get real feedback</p>
         </div>

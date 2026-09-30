@@ -7,6 +7,7 @@ import { getInterview, submitTextAnswer, transcribeAudio,
 import AudioPlayer from '../../components/AudioPlayer';
 import VoiceRecorder from '../../components/VoiceRecorder';
 import CodeEditor from '../../components/CodeEditor';
+import './InterviewPage.css';
 
 // States: 'speaking' | 'listening' | 'thinking' | 'farewell'
 
@@ -15,20 +16,18 @@ function InterviewPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [interview, setInterview] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [state, setState] = useState('speaking'); // interviewer state machine
+  const [state, setState] = useState('speaking');
   const [audioBase64, setAudioBase64] = useState(location.state?.audioBase64 || null);
   const [currentQuestionNum, setCurrentQuestionNum] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(5);
   const [textAnswer, setTextAnswer] = useState('');
   const [code, setCode] = useState('');
-  const [answerMode, setAnswerMode] = useState('voice'); // 'voice' | 'text'
+  const [answerMode, setAnswerMode] = useState('voice');
 
   useEffect(() => {
     const load = async () => {
       const data = await getInterview(id);
-      setInterview(data);
       setCurrentQuestionNum(data.currentQuestion);
       setTotalQuestions(data.totalQuestions);
       if (data.questions?.length > 0) {
@@ -37,7 +36,7 @@ function InterviewPage() {
       if (!location.state?.audioBase64) setState('listening');
     };
     load();
-  }, [id]);
+  }, [id, location.state?.audioBase64]);
 
   const handleAudioEnded = () => setState('listening');
 
@@ -94,55 +93,70 @@ function InterviewPage() {
     navigate(`/feedback/${id}`);
   };
 
+  const progress = totalQuestions ? Math.min((currentQuestionNum / totalQuestions) * 100, 100) : 0;
+  const statusLabel = state === 'speaking' ? 'Interviewer speaking' : state === 'listening' ? 'Your turn' : state === 'thinking' ? 'Reviewing your answer' : 'Session complete';
+
   return (
-    <div className="interview-page">
-      <div className="interview-header">
-        <span>Question {currentQuestionNum} of {totalQuestions}</span>
-        <span className={`status-badge ${state}`}>{state}</span>
-        <button onClick={handleEndInterview} className="end-btn">End Interview</button>
-      </div>
+    <main className="interview-page">
+      <header className="interview-header">
+        <div className="interview-context">
+          <span className="interview-eyebrow">LIVE PRACTICE</span>
+          <span className="question-counter">Question {currentQuestionNum}<span> / {totalQuestions}</span></span>
+        </div>
+        <div className="interview-progress" aria-label={`Question ${currentQuestionNum} of ${totalQuestions}`}>
+          <div className="interview-progress-fill" style={{ width: `${progress}%` }} />
+        </div>
+        <div className="interview-header-actions">
+          <span className={`status-badge ${state}`}><span className="status-dot" />{statusLabel}</span>
+          <button onClick={handleEndInterview} className="end-btn">End session</button>
+        </div>
+      </header>
 
       <AudioPlayer audioBase64={audioBase64} autoPlay onEnded={handleAudioEnded} />
 
-      {currentQuestion && (
-        <div className="question-card">
-          <p className="question-text">{currentQuestion.text}</p>
-          {currentQuestion.isCodeQuestion && (
-            <pre className="code-snippet">{currentQuestion.codeSnippet}</pre>
-          )}
-        </div>
-      )}
-
-      {state === 'listening' && (
-        <div className="answer-section">
-          <div className="answer-mode-tabs">
-            <button onClick={() => setAnswerMode('voice')} className={answerMode === 'voice' ? 'active' : ''}>Voice</button>
-            <button onClick={() => setAnswerMode('text')} className={answerMode === 'text' ? 'active' : ''}>Text</button>
-            {currentQuestion?.isCodeQuestion && (
-              <button onClick={() => setAnswerMode('code')} className={answerMode === 'code' ? 'active' : ''}>Code</button>
+      <div className="interview-content">
+        {currentQuestion && (
+          <section className="question-card" aria-labelledby="question-heading">
+            <div className="question-card-top"><span className="question-label">QUESTION {currentQuestionNum}</span>{currentQuestion.isCodeQuestion && <span className="question-type">Coding prompt</span>}</div>
+            <h1 id="question-heading" className="question-text">{currentQuestion.text}</h1>
+            {currentQuestion.isCodeQuestion && currentQuestion.codeSnippet && (
+              <pre className="code-snippet">{currentQuestion.codeSnippet}</pre>
             )}
-          </div>
+          </section>
+        )}
 
-          {answerMode === 'voice' && <VoiceRecorder onSubmit={handleVoiceSubmit} />}
-          {answerMode === 'text' && (
-            <div className="text-answer">
-              <textarea value={textAnswer} onChange={e => setTextAnswer(e.target.value)}
-                placeholder="Type your answer..." rows={5} />
-              <button onClick={handleTextSubmit}>Submit</button>
+        {state === 'listening' && (
+          <section className="answer-section" aria-label="Your answer">
+            <div className="answer-heading"><h2>Your response</h2><span>Choose how you’d like to answer</span></div>
+            <div className="answer-mode-tabs" role="tablist" aria-label="Answer format">
+              <button type="button" role="tab" aria-selected={answerMode === 'voice'} onClick={() => setAnswerMode('voice')} className={answerMode === 'voice' ? 'active' : ''}>Voice</button>
+              <button type="button" role="tab" aria-selected={answerMode === 'text'} onClick={() => setAnswerMode('text')} className={answerMode === 'text' ? 'active' : ''}>Text</button>
+              {currentQuestion?.isCodeQuestion && (
+                <button type="button" role="tab" aria-selected={answerMode === 'code'} onClick={() => setAnswerMode('code')} className={answerMode === 'code' ? 'active' : ''}>Code</button>
+              )}
             </div>
-          )}
-          {answerMode === 'code' && (
-            <div className="code-answer">
-              <CodeEditor value={code} onChange={setCode} language="javascript" />
-              <button onClick={handleCodeSubmit}>Submit Code</button>
-            </div>
-          )}
-        </div>
-      )}
 
-      {state === 'thinking' && <div className="thinking-indicator">Natalie is thinking...</div>}
-      {state === 'farewell' && <div className="farewell">Generating your feedback...</div>}
-    </div>
+            {answerMode === 'voice' && <VoiceRecorder onSubmit={handleVoiceSubmit} />}
+            {answerMode === 'text' && (
+              <div className="text-answer">
+                <textarea value={textAnswer} onChange={e => setTextAnswer(e.target.value)}
+                  placeholder="Structure your response and explain your reasoning…" rows={5} />
+                <button onClick={handleTextSubmit} disabled={!textAnswer.trim()}>Submit answer <span aria-hidden="true">→</span></button>
+              </div>
+            )}
+            {answerMode === 'code' && (
+              <div className="code-answer">
+                <CodeEditor value={code} onChange={setCode} language="javascript" />
+                <button onClick={handleCodeSubmit} disabled={!code.trim()}>Submit code <span aria-hidden="true">→</span></button>
+              </div>
+            )}
+          </section>
+        )}
+
+        {state === 'thinking' && <div className="interview-state thinking-indicator"><span className="state-spinner" /><div><strong>Reviewing your response</strong><span>Take a breath — the next question is on its way.</span></div></div>}
+        {state === 'farewell' && <div className="interview-state farewell"><span className="farewell-mark">✓</span><div><strong>That’s a wrap</strong><span>Preparing your feedback report…</span></div></div>}
+      </div>
+    </main>
   );
 }
 
